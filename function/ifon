@@ -1,3 +1,4 @@
+#!/bin/bash
 # 
 # 函数: ifon
 # 作用: 询问是否继续( 如果接收为空值,提示错误并要求重新输入 )
@@ -18,7 +19,7 @@ _ifon_readme_(){
     echo -e "\t询问是否继续( 如果接收为空值,提示错误并要求重新输入 )"
 }
 
-ifon(){
+#ifon
     echoStr=
     if [ ! "$1" ];then
         echoStr="默认提示：是否继续？"
@@ -27,7 +28,7 @@ ifon(){
     fi
     echoStr=$echoStr"[Y/n]: "
     if [ "$autoYes" = "y" ];then
-        return 0
+        exit 0
     else
         read -p $echoStr re
         while [ ! "$re" ];do
@@ -35,8 +36,7 @@ ifon(){
         done
         
         if [ $re = "y" -o "$re" = "Y" -o "$re" = "yes" -o "$re" = "YES" -o "$re" = "Yes" ]; then
-            return 0
+            exit 0
         fi
     fi
-    return 1
-}
+    exit 1

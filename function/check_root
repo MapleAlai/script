@@ -1,3 +1,4 @@
+#!/bin/bash
 # 
 # 函数: check_root
 # 作用: 检查执行脚本时,是否具有最高权限
@@ -12,12 +13,11 @@ _check_root_readme_(){
     echo -e "\t检查执行脚本时,是否具有最高权限"
 }
 
-check_root(){
+#check_root
     if [ "$(id -u)" != "0" ]; then
-        echo -e "\n\n\t\t需要 root 权限\n\n\t请使用 sudo bash $0 执行。\n\n"
+        echo -e "\n\n\t\t\t需要 root 权限\n\n\t请使用 sudo bash $0 执行。\n\n"
         if [ ! $1 ];then
             exit 1
         fi
     fi
-    return 1
-}
+    exit 1

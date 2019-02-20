@@ -1,17 +1,19 @@
 #!/bin/bash
 
-bash ./../../function/all_function
+PATH=/usr/bin:/bin:./../../function:./function
 
 #   检查是否具有最高权限,无则提示并退出脚本.
-check_root
+if ! check_root 0;then
+ read -p "请输入 sudo 密码：" password
+fi
 
 #   获取执行脚本的用户
-Who=$(who | awk '{ print $1 }')
+Who=$(whoami)
 
 #   是否全部自动输入 y
 autoYes="n"
 if [ -n "$1" ]; then
-    if [ $1 = "-y" ]; then
+    if [ "$1" = "-y" ]; then
         autoYes="y"
     fi
 fi
@@ -19,11 +21,11 @@ fi
 #   往 ~/.bashrc 中写入 函数接收的第一个参数 ( 如果不存在的话 )
 echo_bashrc(){
     if [ ! "$1" ];then
-	return 1
+	    return 1
     else
-	if [ ! "$(cat ~/.bashrc | grep "$1")" ];then
-	    echo $1 >> ~/.bashrc
-	fi
+        if [ ! "$(cat ~/.bashrc | grep "$1")" ];then
+            echo $1 >> ~/.bashrc
+        fi
     fi
     return 0
 }
@@ -65,44 +67,45 @@ echo_bashrc(){
 if ifon "是否安装ROS？";then
     echo "开始安装ROS：$rosversion"
     
-    echo "deb http://mirrors.tuna.tsinghua.edu.cn/ros/ubuntu/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list
+    sudo sh -c 'echo "deb http://mirrors.tuna.tsinghua.edu.cn/ros/ubuntu/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
     
-    apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
+    echo $password | sudo -S apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
     
-    apt-get update && sudo apt-get upgrade -y
+    echo $password | sudo -S apt-get update && echo $password | sudo -S apt-get upgrade -y
     
-    apt-get -y install ros-$rosversion-desktop-full
+    echo $password | sudo -S apt-get -y install ros-$rosversion-desktop-full
     
-    apt-get -y install ros-$rosversion-rqt*
+    echo $password | sudo -S apt-get -y install ros-$rosversion-rqt*
     
-    rosdep init && sudo -u $Who rosdep update -y
+    echo $password | sudo -S rosdep init && sudo -u $Who rosdep update -y
     
     echo_bashrc "source /opt/ros/$rosversion/setup.bash"
     
-    apt-get -y install python-rosinstall python-rosinstall-generator python-wstool build-essential
+    echo $password | sudo -S apt-get -y install python-rosinstall python-rosinstall-generator python-wstool build-essential
     
     echo "ROS安装过程已结束，请自行检查......"
 fi
 
-    # if ifon "是否创建工作目录？";then
-    #     su $Who
-    #         source ~/.bashrc
-    #         read -p "请输入工作目录名：" Dirname
-    #         mkdir -p ~/$Dirname/src
-    #         cd ~/$Dirname
-    #         catkin_make
-    #         echo_bashrc "source ~/catkin_ws/devel/setup.bash"
+    if ifon "是否创建工作目录？";then
+        read -p "请输入工作目录名：" Dirname
+        sudo -u $Who mkdir -p ~/$Dirname/src
 
-    #         if ifon "是否克隆ROS-Academy-for-Beginners项目到src目录中?";then
-    #             echo "克隆 ROS-Academy-for-Beginners 项目到src目录中......"
-    #             cd ~/catkin_ws/src
-    #             git clone https://github.com/DroidAITech/ROS-Academy-for-Beginners.git
-    #             rosdep install --from-paths src --ignore-src --rosdistro=kinetic -y
-    #             catkin_make
-    #         fi
+        if ifon "是否克隆ROS-Academy-for-Beginners项目到src目录中?";then
+            echo "克隆 ROS-Academy-for-Beginners 项目到src目录中......"
+            cd ~/$Dirname/src
+            sudo -u $Who git clone https://github.com/DroidAITech/ROS-Academy-for-Beginners.git
+            sudo -u $Who rosdep install --from-paths src --ignore-src --rosdistro=kinetic -y
+        fi
         
+        cd ~/$Dirname
+        sudo -u $Who /opt/ros/$rosversion/bin/catkin_make
+        echo_bashrc "source ~/catkin_ws/devel/setup.bash"
     
-    # fi
+    fi
+
+    if ifon "是否测试运行代码? ";then
+        roslaunch robot_sim_demo robot_spawn.launch
+    fi
 
 source ~/.bashrc
 echo
