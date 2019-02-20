@@ -8,7 +8,9 @@
 
 ```bash
 bash script/ros/ros-init.sh
-or
+
+		or
+
 cd script/ros && bash ros-init.sh
 ```
 
