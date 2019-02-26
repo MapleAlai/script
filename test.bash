@@ -7,6 +7,8 @@ if ! check_root;then
     export password=$password
 fi
 
+admin ls
+
 export autoYes=$1
 
 if ifon;then
