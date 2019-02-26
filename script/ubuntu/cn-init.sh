@@ -13,7 +13,11 @@ if ifon "是否安装搜狗输入法？";then
         admin apt-get -y install axel
     fi
     axel -n 10 -o sogoupinyin.deb http://cdn2.ime.sogou.com/dl/index/1524572264/sogoupinyin_2.2.0.0108_amd64.deb?st=huXGNesQzlTdJ5MzBinzMg&e=1551065264&fn=sogoupinyin_2.2.0.0108_amd64.deb
+    echo
+    echo
     admin dpkg -i sogoupinyin.deb
     admin apt-get install -y -f
+
+    rm sogoupinyin.deb
 fi
 
