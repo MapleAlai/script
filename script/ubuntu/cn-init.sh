@@ -23,7 +23,7 @@ if ifon "是否安装搜狗输入法？";then
     rm $filename
 fi
 
-if ifon "是否安装 vsCode？";then
+if ifon "是否安装vsCode";then
     if ! check_rely axel;then
         admin apt-get -y install axel
     fi
