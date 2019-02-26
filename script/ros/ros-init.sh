@@ -80,10 +80,11 @@ if ifon "是否安装ROS？";then
     admin "rosdep init && sudo -u $Who rosdep update -y"
     
     echo_bashrc "source /opt/ros/$rosversion/setup.bash"
+    source /opt/ros/$rosversion/setup.bash
     
     admin "apt-get -y install python-rosinstall python-rosinstall-generator python-wstool build-essential"
 
-    admin "apt-get -y install ros-kinetic-move-base ros-kinetic-map-server ros-kinetic-amcl ros-kinetic-gmapping ros-kinetic-dwa-local-planner ros-kinetic-slam-karto ros-kinetic-hector-mapping"
+    admin "apt-get -y install ros-$rosversion-gazebo-ros ros-$rosversion-gmapping ros-$rosversion-slam-karto ros-$rosversion-amcl ros-$rosversion-move-base ros-$rosversion-map-server ros-$rosversion-dwa-local-planner ros-$rosversion-hector-mapping"
     
     echo "ROS安装过程已结束，请自行检查......"
 fi
@@ -96,16 +97,17 @@ fi
             echo "克隆 ROS-Academy-for-Beginners 项目到src目录中......"
             cd ~/$Dirname/src
             sudo -u $Who git clone https://github.com/DroidAITech/ROS-Academy-for-Beginners.git
-            sudo -u $Who rosdep install --from-paths src --ignore-src --rosdistro=kinetic -y
+            cd ~/$Dirname
+            sudo -u $Who rosdep install --from-paths src --ignore-src --rosdistro=$rosversion -y
+            echo_bashrc "source ~/$Dirname/devel/setup.bash"
         fi
         
         cd ~/$Dirname
-        sudo -u $Who /opt/ros/$rosversion/bin/catkin_make
-        echo_bashrc "source ~/$Dirname/devel/setup.bash"
+        #sudo -u $Who /opt/ros/$rosversion/bin/catkin_make
+        sudo -u $Who catkin_make
+        source ~/$Dirname/devel/setup.bash
     
     fi
-
-source ~/.bashrc
 
     if ifon "是否测试运行代码? ";then
         roslaunch robot_sim_demo robot_spawn.launch
