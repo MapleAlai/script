@@ -12,5 +12,5 @@ admin ls
 export autoYes=$1
 
 if ifon;then
-    echo 1
+    echo 11
 fi
