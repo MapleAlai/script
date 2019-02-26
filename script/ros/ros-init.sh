@@ -34,7 +34,7 @@ echo_bashrc(){
 
 #    if ifon "是否更换apt源为阿里云源？" ; then
 #        echo "更换 apt源 为阿里云......"
-#        sudo sh -c 'echo "
+#        admin sh -c 'echo "
 #        deb http://mirrors.aliyun.com/ubuntu/ $(lsb_release -sc) main restricted universe multiverse
 #        deb http://mirrors.aliyun.com/ubuntu/ $(lsb_release -sc)-security main restricted universe multiverse
 #        deb http://mirrors.aliyun.com/ubuntu/ $(lsb_release -sc)-updates main restricted universe multiverse
@@ -71,20 +71,20 @@ if ifon "是否安装ROS？";then
     
     admin sh -c 'echo "deb http://mirrors.tuna.tsinghua.edu.cn/ros/ubuntu/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
     
-    admin "apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116"
+    admin apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
     
-    admin "apt-get update" && admin "apt-get upgrade -y"
+    admin apt-get update && admin apt-get upgrade -y
     
-    admin "apt-get -y install ros-$rosversion-desktop-full"
+    admin apt-get -y install ros-$rosversion-desktop-full
     
-    admin "apt-get -y install ros-$rosversion-rqt*"
+    admin apt-get -y install ros-$rosversion-rqt*
     
-    admin "rosdep init && user rosdep update -y"
+    admin rosdep init && user rosdep update -y
     
     echo_bashrc "source /opt/ros/$rosversion/setup.bash"
     source /opt/ros/$rosversion/setup.bash
     
-    admin "apt-get -y install python-rosinstall python-rosinstall-generator python-wstool build-essential"
+    admin apt-get -y install python-rosinstall python-rosinstall-generator python-wstool build-essential
     
     echo "ROS安装过程已结束，请自行检查......"
 fi
@@ -104,13 +104,13 @@ fi
         fi
         
         cd ~/$Dirname
-        #user /opt/ros/$rosversion/bin/catkin_make
-        user catkin_make
+        user /opt/ros/$rosversion/bin/catkin_make
+        #user catkin_make
         source ~/$Dirname/devel/setup.bash
 
     fi
     
-    if ifon "是否更新 Gazebo ?";then
+    if ifon "是否更新Gazebo?";then
         admin sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'
         wget http://packages.osrfoundation.org/gazebo.key -O - | admin apt-key add -
         admin apt-get update
