@@ -82,6 +82,8 @@ if ifon "是否安装ROS？";then
     echo_bashrc "source /opt/ros/$rosversion/setup.bash"
     
     echo $password | sudo -S apt-get -y install python-rosinstall python-rosinstall-generator python-wstool build-essential
+
+    echo $password | sudo -S apt-get -y install ros-kinetic-move-base ros-kinetic-map-server ros-kinetic-amcl ros-kinetic-gmapping ros-kinetic-dwa-local-planner ros-kinetic-slam-karto ros-kinetic-hector-mapping 
     
     echo "ROS安装过程已结束，请自行检查......"
 fi
@@ -99,15 +101,16 @@ fi
         
         cd ~/$Dirname
         sudo -u $Who /opt/ros/$rosversion/bin/catkin_make
-        echo_bashrc "source ~/catkin_ws/devel/setup.bash"
+        echo_bashrc "source ~/$Dirname/devel/setup.bash"
     
     fi
+
+source ~/.bashrc
 
     if ifon "是否测试运行代码? ";then
         roslaunch robot_sim_demo robot_spawn.launch
     fi
 
-source ~/.bashrc
 echo
 echo
 echo "请执行"
