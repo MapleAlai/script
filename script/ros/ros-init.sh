@@ -3,7 +3,7 @@
 PATH=/usr/bin:/bin:./../../function:./function
 
 #   检查是否具有最高权限,无则提示并退出脚本.
-if ! check_root 0;then
+if ! check_root;then
  read -p "请输入 sudo 密码：" password
 fi
 
@@ -69,21 +69,21 @@ if ifon "是否安装ROS？";then
     
     sudo sh -c 'echo "deb http://mirrors.tuna.tsinghua.edu.cn/ros/ubuntu/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
     
-    echo $password | sudo -S apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
+    admin "apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116"
     
-    echo $password | sudo -S apt-get update && echo $password | sudo -S apt-get upgrade -y
+    admin "apt-get update" && admin "apt-get upgrade -y"
     
-    echo $password | sudo -S apt-get -y install ros-$rosversion-desktop-full
+    admin "apt-get -y install ros-$rosversion-desktop-full"
     
-    echo $password | sudo -S apt-get -y install ros-$rosversion-rqt*
+    admin "apt-get -y install ros-$rosversion-rqt*"
     
-    echo $password | sudo -S rosdep init && sudo -u $Who rosdep update -y
+    admin "rosdep init && sudo -u $Who rosdep update -y"
     
     echo_bashrc "source /opt/ros/$rosversion/setup.bash"
     
-    echo $password | sudo -S apt-get -y install python-rosinstall python-rosinstall-generator python-wstool build-essential
+    admin "apt-get -y install python-rosinstall python-rosinstall-generator python-wstool build-essential"
 
-    echo $password | sudo -S apt-get -y install ros-kinetic-move-base ros-kinetic-map-server ros-kinetic-amcl ros-kinetic-gmapping ros-kinetic-dwa-local-planner ros-kinetic-slam-karto ros-kinetic-hector-mapping 
+    admin "apt-get -y install ros-kinetic-move-base ros-kinetic-map-server ros-kinetic-amcl ros-kinetic-gmapping ros-kinetic-dwa-local-planner ros-kinetic-slam-karto ros-kinetic-hector-mapping"
     
     echo "ROS安装过程已结束，请自行检查......"
 fi

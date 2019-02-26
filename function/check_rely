@@ -1,0 +1,18 @@
+#!/bin/bash
+# 
+# 函数: check_rely
+# 作用: 检查系统中是否存在 $1 命令。
+# 参数: 
+#      $1: 你所需要的命令
+# 返回值:
+#      0：存在
+#      1: 不存在
+# 
+
+PATH=/usr/bin:/bin:./../../function:./function:./
+
+if [ ! "$(which $1)" ];then 
+    exit 1
+fi
+
+exit 0

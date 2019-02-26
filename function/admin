@@ -1,0 +1,24 @@
+#!/bin/bash
+# 
+# 函数: admin
+# 作用: 提供root权限执行命令（需要环境中有password变量，如果没有就提示添加）
+# 参数: 
+#      $1: 需要root权限执行的命令
+# 返回值:
+#      0
+# 
+
+PATH=/usr/bin:/bin:./../../function:./function:./
+
+if [ ! "$password" ];then
+    read -p "请输入 sudo 密码：" password
+    while [ ! "$password" ];do
+        read -p "不能为空, 请重新输入: " password
+    done
+fi
+
+if [ "$1" ];then
+    echo $password | sudo -S $1
+fi
+
+exit 0

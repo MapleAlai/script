@@ -2,9 +2,6 @@
 # 
 # 函数: check_root
 # 作用: 检查执行脚本时,是否具有最高权限
-# 参数: 
-#      $1: 
-#         0: 不是最高权限也继续执行,起提示作用
 # 返回值:
 #      如果只是提示,则默认返回错误(1)
 # 
@@ -14,10 +11,9 @@ _check_root_readme_(){
 }
 
 #check_root
-    if [ "$(id -u)" != "0" ]; then
-        echo -e "\n\n\t\t\t需要 root 权限\n\n\t请使用 sudo bash $0 执行。\n\n"
-        if [ ! $1 ];then
-            exit 1
-        fi
-    fi
+if [ "$(id -u)" != "0" ]; then
+    echo -e "\n\n\t\t\t需要 root 权限\n\n\t请使用 sudo bash $0 执行。\n\n"
     exit 1
+fi
+
+exit 0
