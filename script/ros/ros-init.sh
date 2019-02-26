@@ -93,6 +93,7 @@ fi
 
     if ifon "是否创建工作目录？";then
         read -p "请输入工作目录名：" Dirname
+        source ~/.bashrc
         user mkdir -p ~/$Dirname/src
 
         if ifon "是否克隆ROS-Academy-for-Beginners项目到src目录中?";then
@@ -120,6 +121,7 @@ fi
     fi
 
     if ifon "是否测试运行代码?";then
+        source ~/.bashrc
         roslaunch robot_sim_demo robot_spawn.launch
         rosrun image_view image_view image:=/camera/depth/image_raw
         rosrun image_view image_view image:=/camera/rgb/image_raw
