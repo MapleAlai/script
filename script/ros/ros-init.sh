@@ -34,7 +34,7 @@ echo_bashrc(){
 
 #    if ifon "是否更换apt源为阿里云源？" ; then
 #        echo "更换 apt源 为阿里云......"
-#        admin sh -c 'echo "
+#        echo $password | sudo -S sh -c 'echo "
 #        deb http://mirrors.aliyun.com/ubuntu/ $(lsb_release -sc) main restricted universe multiverse
 #        deb http://mirrors.aliyun.com/ubuntu/ $(lsb_release -sc)-security main restricted universe multiverse
 #        deb http://mirrors.aliyun.com/ubuntu/ $(lsb_release -sc)-updates main restricted universe multiverse
@@ -70,7 +70,6 @@ if ifon "是否安装ROS？";then
     echo "开始安装ROS：$rosversion"
     
     echo $password | sudo -S sh -c 'echo "deb http://mirrors.tuna.tsinghua.edu.cn/ros/ubuntu/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
-    ls /etc/apt/sources.list.d/ros-latest.list
     
     admin apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
     
@@ -80,7 +79,9 @@ if ifon "是否安装ROS？";then
     
     admin apt-get -y install ros-$rosversion-rqt*
     
-    admin rosdep init && user rosdep update -y
+    admin rosdep init
+    
+    user rosdep update -y
     
     echo_bashrc "source /opt/ros/$rosversion/setup.bash"
     source /opt/ros/$rosversion/setup.bash
@@ -105,8 +106,8 @@ fi
         fi
         
         cd ~/$Dirname
-        user /opt/ros/$rosversion/bin/catkin_make
-        #user catkin_make
+        #user /opt/ros/$rosversion/bin/catkin_make
+        user catkin_make
         source ~/$Dirname/devel/setup.bash
 
     fi
@@ -118,7 +119,7 @@ fi
         admin apt-get install gazebo7
     fi
 
-    if ifon "是否测试运行代码? ";then
+    if ifon "是否测试运行代码?";then
         roslaunch robot_sim_demo robot_spawn.launch
         rosrun image_view image_view image:=/camera/depth/image_raw
         rosrun image_view image_view image:=/camera/rgb/image_raw

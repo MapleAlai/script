@@ -15,8 +15,8 @@ if ifon "是否安装搜狗输入法？";then
     fi
 
     filename="sogoupinyin.deb"
-    axel -n 10 -o $filename http://cdn2.ime.sogou.com/dl/index/1524572264/sogoupinyin_2.2.0.0108_amd64.deb?st=huXGNesQzlTdJ5MzBinzMg&e=1551065264&fn=sogoupinyin_2.2.0.0108_amd64.deb
-    echo
+    fileURL="http://cdn2.ime.sogou.com/dl/index/1524572264/sogoupinyin_2.2.0.0108_amd64.deb?st=huXGNesQzlTdJ5MzBinzMg&e=1551065264&fn=sogoupinyin_2.2.0.0108_amd64.deb"
+    axel -n 10 -o $filename $fileURL
     echo
     admin dpkg -i $filename
     admin apt-get install -y -f
@@ -30,8 +30,8 @@ if ifon "是否安装vsCode";then
     fi
 
     filename="vscode.deb"
-    axel -n 10 -o vscode.deb https://vscode.cdn.azure.cn/stable/1b8e8302e405050205e69b59abb3559592bb9e60/code_1.31.1-1549938243_amd64.deb
-    echo
+    fileURL="https://vscode.cdn.azure.cn/stable/1b8e8302e405050205e69b59abb3559592bb9e60/code_1.31.1-1549938243_amd64.deb"
+    axel -n 10 -o $filename $fileURL
     echo
     admin dpkg -i $filename
     admin apt-get install -y -f
