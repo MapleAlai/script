@@ -9,7 +9,8 @@
 #      1: 不存在
 # 
 
-PATH=/usr/bin:/bin:./../../function:./function:./
+path_root=$(pwd)
+PATH=/usr/bin:/bin:$path_root/../../function:$path_root/function:$path_root
 
 if [ ! "$(which $1)" ];then 
     exit 1

@@ -1,6 +1,7 @@
 #!/bin/bash
 
-PATH=/usr/bin:/bin:./../../function:./function
+path_root=$(pwd)
+PATH=/usr/bin:/bin:$path_root/../../function:$path_root/function:$path_root
 
 #   检查是否具有最高权限,无则提示并退出脚本.
 if ! check_root;then

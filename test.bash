@@ -1,6 +1,7 @@
 #!/bin/bash
 
-PATH=/usr/bin:/bin:./../../function:./function
+path_root=$(pwd)
+PATH=/usr/bin:/bin:$path_root/../../function:$path_root/function:$path_root
 
 if ! check_root;then
     read -p "请输入 sudo 密码：" password
