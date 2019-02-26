@@ -3,7 +3,8 @@
 PATH=/usr/bin:/bin:./../../function:./function
 
 if ! check_root;then
-    exit 1
+    read -p "请输入 sudo 密码：" password
+    export password=$password
 fi
 
 export autoYes=$1

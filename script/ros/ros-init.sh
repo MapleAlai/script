@@ -4,11 +4,12 @@ PATH=/usr/bin:/bin:./../../function:./function
 
 #   检查是否具有最高权限,无则提示并退出脚本.
 if ! check_root;then
- read -p "请输入 sudo 密码：" password
+    read -p "请输入 sudo 密码：" password
+    export password=$password
 fi
 
 #   获取执行脚本的用户
-Who=$(whoami)
+export Who=$(whoami)
 
 #   是否全部自动输入 y
 autoYes="n"
@@ -77,41 +78,52 @@ if ifon "是否安装ROS？";then
     
     admin "apt-get -y install ros-$rosversion-rqt*"
     
-    admin "rosdep init && sudo -u $Who rosdep update -y"
+    admin "rosdep init && user rosdep update -y"
     
     echo_bashrc "source /opt/ros/$rosversion/setup.bash"
     source /opt/ros/$rosversion/setup.bash
     
     admin "apt-get -y install python-rosinstall python-rosinstall-generator python-wstool build-essential"
-
-    admin "apt-get -y install ros-$rosversion-gazebo-ros ros-$rosversion-gmapping ros-$rosversion-slam-karto ros-$rosversion-amcl ros-$rosversion-move-base ros-$rosversion-map-server ros-$rosversion-dwa-local-planner ros-$rosversion-hector-mapping"
     
     echo "ROS安装过程已结束，请自行检查......"
 fi
 
     if ifon "是否创建工作目录？";then
         read -p "请输入工作目录名：" Dirname
-        sudo -u $Who mkdir -p ~/$Dirname/src
+        user mkdir -p ~/$Dirname/src
 
         if ifon "是否克隆ROS-Academy-for-Beginners项目到src目录中?";then
             echo "克隆 ROS-Academy-for-Beginners 项目到src目录中......"
             cd ~/$Dirname/src
-            sudo -u $Who git clone https://github.com/DroidAITech/ROS-Academy-for-Beginners.git
+            user git clone https://github.com/DroidAITech/ROS-Academy-for-Beginners.git
             cd ~/$Dirname
-            sudo -u $Who rosdep install --from-paths src --ignore-src --rosdistro=$rosversion -y
+            user rosdep install --from-paths src --ignore-src --rosdistro=$rosversion -y
             echo_bashrc "source ~/$Dirname/devel/setup.bash"
+            admin "apt-get -y install ros-$rosversion-gazebo-ros ros-$rosversion-gmapping ros-$rosversion-slam-karto ros-$rosversion-amcl ros-$rosversion-move-base ros-$rosversion-map-server ros-$rosversion-dwa-local-planner ros-$rosversion-hector-mapping"
         fi
         
         cd ~/$Dirname
-        #sudo -u $Who /opt/ros/$rosversion/bin/catkin_make
-        sudo -u $Who catkin_make
+        #user /opt/ros/$rosversion/bin/catkin_make
+        user catkin_make
         source ~/$Dirname/devel/setup.bash
+
+    fi
     
+    if ifon "是否更新 Gazebo ?";then
+        admin sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'
+        wget http://packages.osrfoundation.org/gazebo.key -O - | admin apt-key add -
+        admin apt-get update
+        admin apt-get install gazebo7
     fi
 
     if ifon "是否测试运行代码? ";then
         roslaunch robot_sim_demo robot_spawn.launch
+        rosrun image_view image_view image:=/camera/depth/image_raw
+        rosrun image_view image_view image:=/camera/rgb/image_raw
+        rosrun robot_sim_demo robot_keyboard_teleop.py
     fi
+
+    
 
 echo
 echo
