@@ -12,7 +12,7 @@ _check_root_readme_(){
 
 #check_root
 if [ "$(id -u)" != "0" ]; then
-    echo -e "\n\n\t\t\t需要 root 权限\n\n\t请使用 sudo bash $0 执行。\n\n"
+    echo -e "\n\n\t\t\t需要 root 权限\n\n"
     exit 1
 fi
 
