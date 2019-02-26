@@ -69,7 +69,8 @@ echo_bashrc(){
 if ifon "是否安装ROS？";then
     echo "开始安装ROS：$rosversion"
     
-    admin "sh -c 'echo \"deb http://mirrors.tuna.tsinghua.edu.cn/ros/ubuntu/ $(lsb_release -sc) main\" > /etc/apt/sources.list.d/ros-latest.list'"
+    deb_url="deb http://mirrors.tuna.tsinghua.edu.cn/ros/ubuntu/ $(lsb_release -sc) main"
+    admin "sh -c 'echo $deb_url > /etc/apt/sources.list.d/ros-latest.list'"
     ls /etc/apt/sources.list.d/ros-latest.list
     
     admin apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
