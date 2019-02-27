@@ -10,6 +10,7 @@
 path_root=$(pwd)
 PATH=/usr/bin:/bin:$path_root/../../function:$path_root/function:$path_root
 
+
 if [ ! "$password" ];then
     read -p "请输入 sudo 密码：" password
     while [ ! "$password" ];do
@@ -18,6 +19,7 @@ if [ ! "$password" ];then
 fi
 
 if [ "$*" ];then
+    echo $*
     echo $password | sudo -S $*
     exit 0
 fi

@@ -1,6 +1,22 @@
-#!/bin/bash
-
+#!/bin/zsh
 path_root=$(pwd)
 PATH=/usr/bin:/bin:$path_root/../../function:$path_root/function:$path_root
 
-echo $*
+json='[{
+    "name":"张三",
+    "arg":19,
+    "a":{
+        "name":"123"
+    }
+},{
+    "name":"123"
+}]'
+
+arr_a=(1 2 3)
+
+test(){
+    local a=$1
+    echo $*
+}
+
+test $arr_a

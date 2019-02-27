@@ -131,12 +131,74 @@ fi
         rosrun robot_sim_demo robot_keyboard_teleop.py
     fi
 
-    
+    if ifon "是否安装CUDA_Toolkit?";then
+        if ! check_rely axel;then
+            admin apt-get -y install axel
+        fi
 
-echo
-echo
-echo "请执行"
-echo -e "\tsource ~/.bashrc"
-echo "或重启一个终端"
+        filename="cudaToolKitNetworkInstall.deb"
+        fileURL="https://developer.download.nvidia.cn/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_8.0.61-1_amd64.deb"
+        axel -n 10 -o $filename $fileURL
+        echo
+        admin dpkg -i $filename
+        admin apt-get update
+        admin apt-get install -y cuda
+        echo_bashrc 'export CUDA_HOME=/usr/local/cuda'
+        rm $filename
+    fi
+
+    if ifon "是否安装cuDNN-v5.1?";then
+        if ! check_rely tar;then
+            admin apt-get -y install tar
+        fi
+
+        echo -e "\n请手动下载.tzg文件，URL:"
+        echo -e "\thttps://blog.csdn.net/sunmingliu/article/details/79763929"
+        echo -e "\n将它放在 $(pwd) 目录下。"
+        if ifon "是否完整？";then
+            admin tar -xzvf cudnn-8.0-linux-x64-v5.1.tgz 
+
+            admin cp cuda/include/cudnn.h /usr/local/cuda/include 
+
+            admin cp cuda/lib64/libcudnn* /usr/local/cuda/lib64 
+
+            admin chmod a+r /usr/local/cuda/include/cudnn.h /usr/local/cuda/lib64/libcudnn*
+
+            admin cat /usr/local/cuda/include/cudnn.h | grep CUDNN_MAJOR -A2  
+        fi
+
+        echo_bashrc 'export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64"'
+    fi
+
+    if ifon "是否安装TensorFlow-GPU(1.2)?";then
+        if ! check_rely python3;then
+            admin apt-get -y install python3-dev
+        fi
+
+        admin python3 -m pip install tensorflow-gpu==1.2
+
+        if ifon "是否测试Tensorflow-GPU？";then
+            git clone https://github.com/tensorflow/models.git
+
+            cd models/tutorials/image/mnist
+            python convolutional.py
+        fi
+    fi
+
+    if ifon "是否安装SSD框架？";then
+        if ! check_rely git;then
+            admin apt-get -y install git
+        fi
+        git clone https://github.com/weiliu89/caffe.git
+        cd caffe
+        git checkout ssd
+
+        cp Makefile.config.example Makefile.config
+        make -j8
+        make py
+        make test -j8
+        make runtest -j8
+
+    fi
 
 exit 0

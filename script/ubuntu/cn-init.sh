@@ -39,3 +39,15 @@ if ifon "是否安装vsCode";then
     rm $filename
 fi
 
+if ifon "是否安装Chrome浏览器？";then
+    if ! check_rely wget;then
+        admin apt-get -y install wget
+    fi
+
+    admin wget https://repo.fdzh.org/chrome/google-chrome.list -P /etc/apt/sources.list.d/
+    wget -q -O - https://dl.google.com/linux/linux_signing_key.pub > tempFile 
+    admin apt-key add tempFile
+    rm tempFile
+    admin apt-get update
+    admin apt-get install google-chrome-stable
+fi
