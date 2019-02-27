@@ -88,6 +88,9 @@ if ifon "是否安装ROS？";then
     
     admin apt-get -y install python-rosinstall python-rosinstall-generator python-wstool build-essential
     
+    echo -e "\n更改 /opt/ros/$rosversion/lib/python2.7/dist-packages/cv2.so 为 cv2_ros.so"
+    admin mv /opt/ros/$rosversion/lib/python2.7/dist-packages/cv2.so /opt/ros/$rosversion/lib/python2.7/dist-packages/cv2_ros.so
+
     echo "ROS安装过程已结束，请自行检查......"
 fi
 
