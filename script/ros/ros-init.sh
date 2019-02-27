@@ -200,5 +200,5 @@ fi
         make runtest -j8
 
     fi
-
+    https://blog.csdn.net/xinyuanjoe/article/details/78679884
 exit 0
