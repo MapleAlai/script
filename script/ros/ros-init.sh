@@ -143,7 +143,7 @@ fi
         admin dpkg -i $filename
         admin apt-get update
         admin apt-get install -y cuda
-        echo_bashrc 'export CUDA_HOME=/usr/local/cuda'
+        echo_bashrc 'export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64"'
         rm $filename
     fi
 
@@ -167,7 +167,7 @@ fi
             admin cat /usr/local/cuda/include/cudnn.h | grep CUDNN_MAJOR -A2  
         fi
 
-        echo_bashrc 'export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64"'
+        echo_bashrc 'export CUDA_HOME=/usr/local/cuda'
     fi
 
     if ifon "是否安装TensorFlow-GPU(1.2)?";then
