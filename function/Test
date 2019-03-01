@@ -2,26 +2,9 @@
 path_root=$(pwd)
 PATH=/usr/bin:/bin:$path_root/../../function:$path_root/function:$path_root
 
-grep ^root /etc/passwd
+Tcols=$(tput cols)
+Tlines=$(tput lines)
+whiptail
+msgbox(){
 
-json='[{
-    "name":"张三",
-    "arg":19,
-    "a":{
-        "name":"123"
-    }
-},{
-    "name":"123"
-}]'
-
-arr_a=(1 2 3)
-arr_b=($arr_a "a" "s" "d")
-
-test(){
-    local a=$1
-    echo $*
-}
-{
-local a
-test $arr_b
 }
