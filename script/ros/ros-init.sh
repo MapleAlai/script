@@ -105,13 +105,13 @@ fi
             user git clone https://github.com/DroidAITech/ROS-Academy-for-Beginners.git
             cd ~/$Dirname
             user rosdep install --from-paths src --ignore-src --rosdistro=$rosversion -y
-            echo_bashrc "source ~/$Dirname/devel/setup.sh"
             admin "apt-get -y install ros-$rosversion-gazebo-ros ros-$rosversion-gmapping ros-$rosversion-slam-karto ros-$rosversion-amcl ros-$rosversion-move-base ros-$rosversion-map-server ros-$rosversion-dwa-local-planner ros-$rosversion-hector-mapping"
         fi
         
         cd ~/$Dirname
         #user /opt/ros/$rosversion/bin/catkin_make
         user catkin_make
+        echo_bashrc "source ~/$Dirname/devel/setup.sh"
         source ~/$Dirname/devel/setup.sh
 
     fi
@@ -207,4 +207,5 @@ fi
 
     fi
     https://blog.csdn.net/xinyuanjoe/article/details/78679884
+    https://blog.csdn.net/houchaoqun_xmu/article/details/72822199
 exit 0
