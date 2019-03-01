@@ -25,8 +25,8 @@ echo_bashrc(){
     if [ ! "$1" ];then
 	    return 1
     else
-        if [ ! "$(cat ~/.bashrc | grep "$1")" ];then
-            echo $1 >> ~/.bashrc
+        if [ ! "$(cat ~/.*shrc | grep "$1")" ];then
+            echo $1 >> ~/.*shrc
         fi
     fi
     return 0
@@ -83,8 +83,8 @@ if ifon "是否安装ROS？";then
     
     user rosdep update -y
     
-    echo_bashrc "source /opt/ros/$rosversion/setup.bash"
-    source /opt/ros/$rosversion/setup.bash
+    echo_bashrc "source /opt/ros/$rosversion/setup.sh"
+    source /opt/ros/$rosversion/setup.sh
     
     admin apt-get -y install python-rosinstall python-rosinstall-generator python-wstool build-essential
     
@@ -105,14 +105,14 @@ fi
             user git clone https://github.com/DroidAITech/ROS-Academy-for-Beginners.git
             cd ~/$Dirname
             user rosdep install --from-paths src --ignore-src --rosdistro=$rosversion -y
-            echo_bashrc "source ~/$Dirname/devel/setup.bash"
+            echo_bashrc "source ~/$Dirname/devel/setup.sh"
             admin "apt-get -y install ros-$rosversion-gazebo-ros ros-$rosversion-gmapping ros-$rosversion-slam-karto ros-$rosversion-amcl ros-$rosversion-move-base ros-$rosversion-map-server ros-$rosversion-dwa-local-planner ros-$rosversion-hector-mapping"
         fi
         
         cd ~/$Dirname
         #user /opt/ros/$rosversion/bin/catkin_make
         user catkin_make
-        source ~/$Dirname/devel/setup.bash
+        source ~/$Dirname/devel/setup.sh
 
     fi
     
@@ -145,6 +145,12 @@ fi
         admin apt-get install -y cuda
         echo_bashrc 'export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64"'
         rm $filename
+
+        if ifon "是否测试?";then
+            cd /usr/local/cuda-8.0/samples/1_Utilities/deviceQuery
+            sudo make
+            sudo ./deviceQuery
+        fi
     fi
 
     if ifon "是否安装cuDNN-v5.1?";then
@@ -161,7 +167,7 @@ fi
             admin cp cuda/include/cudnn.h /usr/local/cuda/include 
 
             admin cp cuda/lib64/libcudnn* /usr/local/cuda/lib64 
-
+            
             admin chmod a+r /usr/local/cuda/include/cudnn.h /usr/local/cuda/lib64/libcudnn*
 
             admin cat /usr/local/cuda/include/cudnn.h | grep CUDNN_MAJOR -A2  

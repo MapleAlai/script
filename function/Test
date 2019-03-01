@@ -2,6 +2,8 @@
 path_root=$(pwd)
 PATH=/usr/bin:/bin:$path_root/../../function:$path_root/function:$path_root
 
+grep ^root /etc/passwd
+
 json='[{
     "name":"张三",
     "arg":19,
@@ -13,10 +15,13 @@ json='[{
 }]'
 
 arr_a=(1 2 3)
+arr_b=($arr_a "a" "s" "d")
 
 test(){
     local a=$1
     echo $*
 }
-
-test $arr_a
+{
+local a
+test $arr_b
+}

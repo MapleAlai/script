@@ -51,3 +51,7 @@ if ifon "是否安装Chrome浏览器？";then
     admin apt-get update
     admin apt-get install google-chrome-stable
 fi
+
+if ifon "是否安装pycharm？";then
+    admin snap install pycharm-community --classic
+fi    
