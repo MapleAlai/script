@@ -181,15 +181,9 @@ export LD_LIBRARY_PATH=/usr/local/cuda-8.0/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY
 
 
 start(){
-    if [ ! "$(apt list | grep ros-$rosversion-desktop-full)" ];then
+    if [ ! "$(apt list --installed 2>/dev/null | grep ros-$rosversion-desktop-full)" ];then
         install_ros
-    elif [ ! "$(tree -L 2 . | grep devel)" ];then
+    elif [ ! "$(tree -L 2 ~ | grep devel)" ];then
         make_ros_dir
-    elif [];then
-
-    elif [];then
-
-    elif [];then
-
     fi
 }

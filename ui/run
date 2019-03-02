@@ -1,0 +1,19 @@
+#!/bin/bash
+
+PATH=$PATH:.:./ui:../ui:../../ui
+
+echo_1(){
+    echo 1
+}
+echo_2(){
+    echo 2
+}
+
+source menu "echo_1" echo_1
+declare -A menu_dic${#menu_arry[@]}
+menu_dic1[name]="test1"
+eval `menu_dic${#menu_arry[@]}[name]="test"`
+eval echo \${menu_dic${#menu_arry[@]}[name]}
+source menu "echo_2" echo_2
+
+source menu_run

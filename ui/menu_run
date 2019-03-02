@@ -1,0 +1,9 @@
+#!/bin/bash
+
+PATH=$PATH:.:./ui:../ui:../../ui
+
+#echo ${menu_arry[*]}
+for dic in ${menu_arry[@]}; do
+    eval echo \${$dic[name]}
+    eval \${$dic[function]}
+done

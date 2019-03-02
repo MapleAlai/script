@@ -1,0 +1,28 @@
+#!/bin/bash
+
+PATH=$PATH:.:./ui:../ui:../../ui
+
+menu_no_function(){
+    whiptail --title "提示" --msgbox "此选项没有添加处理函数，此界面为默认提示界面。" 7 50
+}
+
+# 使用条件： 上级环境变量中要有 menu_arry 数组。
+# 数组中存放字典，字典中必须包含 key：name(选项名) && function(选项选中中执行的函数)
+# 数组中也存放了选项 确认键 和 返回键 的事件。
+
+# 此处接收两个值 $1 name $2 function
+
+declare -A menu_dic
+
+if [ ! "$1" ];then
+    exit 1
+fi
+menu_dic[name]=$1
+
+if [ ! "$2" ];then
+    menu_dic[function]=menu_no_function
+fi
+
+menu_dic[function]=$2
+
+menu_arry[${#menu_arry[@]}]=menu_dic
