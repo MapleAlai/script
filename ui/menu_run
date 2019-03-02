@@ -3,7 +3,19 @@
 PATH=$PATH:.:./ui:../ui:../../ui
 
 #echo ${menu_arry[*]}
-for dic in ${menu_arry[@]}; do
-    eval echo \${$dic[name]}
-    eval \${$dic[function]}
+for index in ${!menu_arry[@]}; do
+    dic=${menu_arry[$index]}
+    #eval echo \${$dic[name]}
+    #eval \${$dic[function]}
+    eval name="\${$dic[name]}"
+    let index++
+    list=$list" "$index" "$name
 done
+
+title=""
+if [ "$1" ];then
+    title=$1
+fi
+    check=$(whiptail --menu "$title" 10 60 4 $list 3>&1 1>&2 2>&3)
+    let check--
+    eval \${${menu_arry[$check]}[function]}

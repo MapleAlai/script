@@ -12,17 +12,17 @@ menu_no_function(){
 
 # 此处接收两个值 $1 name $2 function
 
-declare -A menu_dic
+declare -A menu_dic${#menu_arry[@]}
 
 if [ ! "$1" ];then
     exit 1
 fi
-menu_dic[name]=$1
+eval menu_dic${#menu_arry[@]}[name]=$1
 
 if [ ! "$2" ];then
     menu_dic[function]=menu_no_function
 fi
 
-menu_dic[function]=$2
+eval menu_dic${#menu_arry[@]}[function]=$2
 
-menu_arry[${#menu_arry[@]}]=menu_dic
+menu_arry[${#menu_arry[@]}]=menu_dic${#menu_arry[@]}

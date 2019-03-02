@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ "$(id -u)" != "0" ]; then
+    whiptail --clear --title "错误" --msgbox "                     需要 root 权限" 7 60
+    exit 1
+fi
+
+exit 0

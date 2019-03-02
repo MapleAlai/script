@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if [ ! "$1" ];then
+    text="默认提示：是否继续？"
+else
+    text=$1
+fi
+
+yesBtn="确认"
+noBtn="取消"
+
+exit $(whiptail --yes-button $yesBtn --no-button $noBtn --yesno $text 10 60 3>&1 1>&2 2>&3)
