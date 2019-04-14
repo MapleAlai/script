@@ -24,4 +24,6 @@ string_git="
 	\temail = $user_email\n[credential]\n
     \thelper=store
 "
+git config --global user.email "$user_email"
+git config --global user.name "$user_name"
 echo -e $string_git > ~/.gitconfig
