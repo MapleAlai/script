@@ -1,0 +1,10 @@
+#!/bin/bash
+path_root=$(pwd)
+PATH=/usr/bin:/bin:$path_root/../../function:$path_root/function:$path_root
+
+if ! check_rely axel; then
+    sudo apt-get install -y axel
+fi
+
+axel -a -n 100 $1
+exit 0
