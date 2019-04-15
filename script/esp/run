@@ -41,9 +41,9 @@ elif [ $CpuType = "x86" ]; then
     axel -a -n 100 -o esp32.tar.xz https://dl.espressif.com/dl/xtensa-esp32-elf-gcc8_2_0-esp32-2019r1-rc2-linux-i686.tar.xz
     axel -a -n 100 https://dl.espressif.com/dl/xtensa-lx106-elf-linux32-1.22.0-92-g8facf4c-5.2.0.tar.gz
 fi
-tar -xvJf esp32.tar.xz
+tar -xvJf $ROOT/toolchain/esp32.tar.xz -C $ROOT/toolchain/
 if [ $CpuType = "x86" -o $CpuType = "x86_64" ]; then
-    tar -zvxf esp8266.tar.gz
+    tar -zvxf $ROOT/toolchain/esp8266.tar.gz -C $ROOT/toolchain/
 fi
 echo 
 echo
