@@ -17,6 +17,7 @@ read -p "请输入本机cpu类型(x86,x86_64,arm)：" CpuType
 ROOT=~/esp/environment
 echo 创建目录
 mkdir -p $ROOT/toolchain
+mkdir -p $ROOT/bin
 mkdir -p ~/esp/esp32/components
 mkdir -p ~/esp/esp32/project
 if [ $CpuType = "x86" -o $CpuType = "x86_64" ]; then
@@ -63,17 +64,45 @@ echo
 python -m pip install --user -r ~/esp/esp32/esp-idf/requirements.txt
 echo 
 echo 
+
+# creak esp-make script's file
+cat>$ROOT/bin/esp-make<<EOF
+#!/bin/bash
+make -j$(( `cat /proc/cpuinfo| grep "processor"| wc -l` * 2 )) flash monitor
+exit 0
+EOF
+# creak esp-make-app script's file
+cat>$ROOT/bin/esp-make-app<<EOF
+#!/bin/bash
+make -j$(( `cat /proc/cpuinfo| grep "processor"| wc -l` * 2 )) app-flash monitor
+exit 0
+EOF
+
+
+
 #   环境变量添加：
 if [ $CpuType = "x86" -o $CpuType = "x86_64" ]; then
-    echo_shrc "export ESPROOT=~/esp/esp8266"
-    echo_shrc "export ESP32ROOT=~/esp/esp32"
+    echo_shrc "export ESP8266ROOT=~/esp/esp8266"
+    echo_shrc "export ESPROOT=\$ESP8266ROOT"
     echo_shrc "export PATH=\$PATH:~/esp/environment/toolchain/xtensa-lx106-elf/bin"
+    # creak esp-change script's file
+    cat>$ROOT/bin/esp-change<<EOF
+#!/bin/bash
+if [ "\$1" = "32" ];then
+    sed -i "s/ESPROOT=\$ESP8266ROOT/ESPROOT=\$ESP32ROOT/g"  \`grep ESPROOT=\$ESP8266ROOT -rl ~/.*shrc\`
 else
-    echo_shrc "export ESPROOT=~/esp/esp32"
+    sed -i "s/ESPROOT=\$ESP32ROOT/ESPROOT=\$ESP8266ROOT/g"  \`grep ESPROOT=\$ESP32ROOT -rl ~/.*shrc\`
+fi
+exit 0
+EOF
+else
+    echo_shrc "export ESP32ROOT=~/esp/esp32"
+    echo_shrc "export ESPROOT=\$ESP32ROOT"
 fi
 echo_shrc "export PATH=\$PATH:~/esp/environment/toolchain/xtensa-esp32-elf/bin"
+echo_shrc "export PATH=\$PATH:~/esp/environment/bin"
 echo_shrc "export IDF_PATH=\$ESPROOT/esp-idf"
 #   收尾
+chmod +x $ROOT/bin/*
 # rm $ROOT/toolchain/*.tar.gz
 exit 0
-
