@@ -2,7 +2,7 @@
 
 path_root=$(pwd)
 PATH=/usr/bin:/bin:$path_root/../../function:$path_root/function:$path_root
-echo_shrc(){
+function echo_shrc(){
     if [ ! "$1" ];then
 	    return 1
     else
@@ -19,7 +19,7 @@ echo 创建目录
 mkdir -p $ROOT/toolchain
 mkdir -p ~/esp/esp32/components
 mkdir -p ~/esp/esp32/project
-if [ CpuType = "x86" or CpuType = "x86_64" ]; then
+if [ $CpuType = "x86" -o $CpuType = "x86_64" ]; then
     mkdir -p ~/esp/esp8266/components
     mkdir -p ~/esp/esp8266/project
 fi
@@ -27,22 +27,22 @@ fi
 echo 
 echo 
 echo 添加必要软件包 gcc git wget make libncurses-dev flex bison gperf python python-pip python-setuptools python-serial
-sudo apt-get install -y axel gcc git wget make libncurses-dev flex bison gperf python python-pip python-setuptools python-serial
+sudo apt-get install gcc git wget make libncurses-dev flex bison gperf python python-pip python-setuptools python-serial python-cryptography python-future python-pyparsing python-pyelftools
 echo 
 echo 
 echo 添加 esp32[gcc 8.20] '&' esp8266[gcc 5.20] 编译的工具链 
 cd $ROOT/toolchain
-if [ CpuType = "arm" ]; then
-    Download -o esp32.tar.xz https://dl.espressif.com/dl/xtensa-esp32-elf-gcc8_2_0-esp32-2019r1-rc2-linux-armel.tar.xz
-elif [ CpuType = "x86_64" ]; then
-    Download -o esp32.tar.xz https://dl.espressif.com/dl/xtensa-esp32-elf-gcc8_2_0-esp32-2019r1-rc2-linux-amd64.tar.xz
-    Download -o esp8266.tar.gz https://dl.espressif.com/dl/xtensa-lx106-elf-linux64-1.22.0-92-g8facf4c-5.2.0.tar.gz
-elif [ CpuType = "x86" ]; then
-    Download -o esp32.tar.xz https://dl.espressif.com/dl/xtensa-esp32-elf-gcc8_2_0-esp32-2019r1-rc2-linux-i686.tar.xz
-    Download https://dl.espressif.com/dl/xtensa-lx106-elf-linux32-1.22.0-92-g8facf4c-5.2.0.tar.gz
+if [ $CpuType = "arm" ]; then
+    axel -a -n 100 -o esp32.tar.xz https://dl.espressif.com/dl/xtensa-esp32-elf-gcc8_2_0-esp32-2019r1-rc2-linux-armel.tar.xz
+elif [ $CpuType = "x86_64" ]; then
+    axel -a -n 100 -o esp32.tar.xz https://dl.espressif.com/dl/xtensa-esp32-elf-gcc8_2_0-esp32-2019r1-rc2-linux-amd64.tar.xz
+    axel -a -n 100 -o esp8266.tar.gz https://dl.espressif.com/dl/xtensa-lx106-elf-linux64-1.22.0-92-g8facf4c-5.2.0.tar.gz
+elif [ $CpuType = "x86" ]; then
+    axel -a -n 100 -o esp32.tar.xz https://dl.espressif.com/dl/xtensa-esp32-elf-gcc8_2_0-esp32-2019r1-rc2-linux-i686.tar.xz
+    axel -a -n 100 https://dl.espressif.com/dl/xtensa-lx106-elf-linux32-1.22.0-92-g8facf4c-5.2.0.tar.gz
 fi
 tar -xvJf esp32.tar.xz
-if [ CpuType = "x86" or CpuType = "x86_64" ]; then
+if [ $CpuType = "x86" -o $CpuType = "x86_64" ]; then
     tar -zvxf esp8266.tar.gz
 fi
 echo 
@@ -50,11 +50,11 @@ echo
 echo 添加 esp-idf SDK "&" esp8266-idf SDK 到 $ROOT
 echo 由于这是第一次部署环境脚本 ， 因此 SDK 需要下载的 ， 确保不会出现 SDK 文件缺失引起的问题.
 cd ~/esp/esp32
-git clone --recursive https://github.com/espressif/esp-idf.git
-if [ CpuType = "x86" or CpuType = "x86_64" ]; then
+git clone --recursive https://github.com/espressif/esp-idf.git esp-idf
+if [ $CpuType = "x86" -o $CpuType = "x86_64" ]; then
     cd ~/esp/esp8266
     echo
-    git clone --recursive https://github.com/espressif/ESP8266_RTOS_SDK.git esp8266-idf
+    git clone --recursive https://github.com/espressif/ESP8266_RTOS_SDK.git esp-idf
     echo 
 fi
 echo 
@@ -64,15 +64,16 @@ python -m pip install --user -r ~/esp/esp32/esp-idf/requirements.txt
 echo 
 echo 
 #   环境变量添加：
-echo_shrc "export ESPROOT=\"~\"/esp/esp8266"
-echo_shrc "export ESP32ROOT=\"~\"/esp/esp32"
-echo_shrc "export PATH=\"$\"PATH:\"$ROOT\"/toolchain/xtensa-esp32-elf/bin"
-if [ CpuType = "x86" or CpuType = "x86_64" ]; then
-    echo_shrc "export PATH=\"$\"PATH:\"$ROOT\"/toolchain/xtensa-lx106-elf/bin"
+if [ $CpuType = "x86" -o $CpuType = "x86_64" ]; then
+    echo_shrc "export ESPROOT=~/esp/esp8266"
+    echo_shrc "export ESP32ROOT=~/esp/esp32"
+    echo_shrc "export PATH=\$PATH:~/esp/environment/toolchain/xtensa-lx106-elf/bin"
+else
+    echo_shrc "export ESPROOT=~/esp/esp32"
 fi
-echo_shrc "export PATH=\"$\"PATH:\"$ROOT\"/bin"
-echo_shrc "export IDF_PATH=\"$\"ESPROOT/esp8266-idf"
+echo_shrc "export PATH=\$PATH:~/esp/environment/toolchain/xtensa-esp32-elf/bin"
+echo_shrc "export IDF_PATH=\$ESPROOT/esp-idf"
 #   收尾
-rm $ROOT/toolchain/*.tar.gz
+# rm $ROOT/toolchain/*.tar.gz
 exit 0
 
