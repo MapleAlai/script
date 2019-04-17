@@ -82,9 +82,9 @@ EOF
 
 #   环境变量添加：
 if [ $CpuType = "x86" -o $CpuType = "x86_64" ]; then
-    echo_shrc "export ESP8266ROOT=~/esp/esp8266"
-    echo_shrc "export ESPROOT=\$ESP8266ROOT"
-    echo_shrc "export PATH=\$PATH:~/esp/environment/toolchain/xtensa-lx106-elf/bin"
+    echo_shrc "ESP8266ROOT=~/esp/esp8266"
+    echo_shrc "ESPROOT=\$ESP8266ROOT"
+    echo_shrc "PATH=\$PATH:~/esp/environment/toolchain/xtensa-lx106-elf/bin"
     # creak esp-change script's file
     cat>$ROOT/bin/esp-change<<EOF
 #!/bin/bash
@@ -96,12 +96,12 @@ fi
 exit 0
 EOF
 else
-    echo_shrc "export ESP32ROOT=~/esp/esp32"
-    echo_shrc "export ESPROOT=\$ESP32ROOT"
+    echo_shrc "ESP32ROOT=~/esp/esp32"
+    echo_shrc "ESPROOT=\$ESP32ROOT"
 fi
-echo_shrc "export PATH=\$PATH:~/esp/environment/toolchain/xtensa-esp32-elf/bin"
-echo_shrc "export PATH=\$PATH:~/esp/environment/bin"
-echo_shrc "export IDF_PATH=\$ESPROOT/esp-idf"
+echo_shrc "PATH=\$PATH:~/esp/environment/toolchain/xtensa-esp32-elf/bin"
+echo_shrc "PATH=\$PATH:~/esp/environment/bin"
+echo_shrc "IDF_PATH=\$ESPROOT/esp-idf"
 #   收尾
 chmod +x $ROOT/bin/*
 # rm $ROOT/toolchain/*.tar.gz
