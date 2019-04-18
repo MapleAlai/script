@@ -27,8 +27,8 @@ fi
 
 echo 
 echo 
-echo 添加必要软件包 gcc git wget make libncurses-dev flex bison gperf python python-pip python-setuptools python-serial python-cryptography python-future python-pyparsing python-pyelftools
-sudo apt-get install gcc git wget make libncurses-dev flex bison gperf python python-pip python-setuptools python-serial python-cryptography python-future python-pyparsing python-pyelftools
+echo 添加必要软件包 axel gcc git wget make libncurses-dev flex bison gperf python python-pip python-setuptools python-serial python-cryptography python-future python-pyparsing python-pyelftools
+sudo apt-get install -y axel gcc git wget make libncurses-dev flex bison gperf python python-pip python-setuptools python-serial python-cryptography python-future python-pyparsing python-pyelftools
 echo 
 echo 
 echo 添加 esp32[gcc 8.20] '&' esp8266[gcc 5.20] 编译的工具链 
