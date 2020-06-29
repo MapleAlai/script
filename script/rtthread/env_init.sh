@@ -56,6 +56,22 @@ if [ ${#success} != 0 ];then
   echo $success
 else
   echo $result
+  err=$(echo $result | grep -lstdc++)
+  if (${#err} != 0);then
+    echo "该BSP启用了 C++ features, 但是你没有选择安装支持库，故此编译错误。"
+    if ifon "是否需要 C++ features 支持库?";then
+      app_list="libstdc++-arm-none-eabi-newlib "
+    fi
+  fi
+  err=$(echo $result | grep crt0.o)
+  if (${#err} != 0);then
+    echo "可能是 libnewlib-arm-none-eabi 库没有安装成功，尝试重新安装...."
+    app_list=$app_list"libnewlib-arm-none-eabi "
+  fi
+  if [ ${#app_list} != 0 ];then
+    echo "install $app_list"
+    admin "apt install -y ${app_list}"
+  fi
 fi
 
 
