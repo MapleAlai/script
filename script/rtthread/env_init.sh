@@ -21,7 +21,7 @@ if ! check_rely qemu-system-arm;then
 	fi
 fi
 # 安装
-if [ $a ];then
+if [ $app_list ];then
   admin "apt install -y ${app_list}"
 fi
 
@@ -32,7 +32,12 @@ export RTT_EXEC_PATH=/usr/bin
 cd ~
 #  不断尝试获取 rt-thread 源码，直到获取成功或者被中断
 while [ ! $(ls | grep rt-thread) ];do
-  git clone https://gitee.com/rtthread/rt-thread.git
+  ping -c 1 www.google.com &> /dev/null
+  if [ -n $? ];then
+    git clone https://github.com/rtthread/rt-thread.git
+  else
+    git clone https://gitee.com/rtthread/rt-thread.git
+  fi
 done
 if check_rely qemu-system-arm;then
   cd rt-thread/bsp/qemu-vexpress-a9
