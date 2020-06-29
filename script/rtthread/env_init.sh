@@ -89,10 +89,10 @@ fi
 if [ ! $(ls ~/| grep .env) ];then
   scons --menuconfig
 fi
-if [ ! $(ls ~/.env/packages/packages) ];then
+if [ ! $(ls ~/.env/packages) ];then
   scons --menuconfig
 fi
-if [ ! $(ls ~/.env/tools/scripts) ];then
+if [ ! $(ls ~/.env/tools) ];then
   scons --menuconfig
 fi
 
