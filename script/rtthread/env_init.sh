@@ -38,6 +38,7 @@ while [ ! $(ls | grep rt-thread) ];do
     git clone https://github.com/rtthread/rt-thread.git
   else
     git clone https://gitee.com/rtthread/rt-thread.git
+    sed -i 's/gitee.com/github.com/g' rt-thread/.git/config
   fi
 done
 if check_rely qemu-system-arm;then
