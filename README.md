@@ -14,3 +14,13 @@ bash script/ros/ros-init.sh
 cd script/ros && bash ros-init.sh
 ```
 
+### rtthread/env-init.sh	——	 RT-Thread 系统编译环境一键安装脚本
+
+```bash
+bash script/rtthread/env-init.sh
+
+		or
+
+cd script/rtthread && bash env-init.sh
+```
+
