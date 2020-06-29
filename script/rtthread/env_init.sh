@@ -44,7 +44,7 @@ fi
 cpu_processor=`expr $(grep -c 'processor' /proc/cpuinfo) \* 2`
 #  编译
 result=$(scons -j$cpu_processor)
-success=$(echo $success | grep -A 3 -i "hex filename")
+success=$(echo $result | grep -A 3 -i "filename")
 if [ $success ];then
   echo "编译成功"
   echo $success
