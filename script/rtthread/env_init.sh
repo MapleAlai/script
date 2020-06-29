@@ -6,7 +6,7 @@ PATH=/usr/bin:/bin:$path_root/../../function:$path_root/function:$path_root
 app_list=""
 if ! check_rely arm-none-eabi-gcc;then
   app_list=$app_list"gcc-arm-none-eabi libncurses5-dev libnewlib-arm-none-eabi "
-  if ! ifon "是否需要 C++ features 支持库?";then
+  if ifon "是否需要 C++ features 支持库?";then
     app_list=$app_list"libstdc++-arm-none-eabi-newlib "
 	fi
 fi
@@ -15,13 +15,14 @@ if ! check_rely scons;then
   app_list=$app_list"scons "
 fi
 
-if ! check_rely qemu-system-arm;then
-	if ! ifon "是否需要 qemu 模拟器？";then
+if check_rely qemu-system-arm;then
+	if ifon "是否需要 qemu 模拟器？";then
   	app_list=$app_list"qemu qemu-system-arm "
 	fi
 fi
 # 安装
-if [ $app_list ];then
+if [ ${#app_list} != 0 ];then
+  echo "install $app_list"
   admin "apt install -y ${app_list}"
 fi
 
@@ -47,11 +48,13 @@ fi
 #  获取cpu核心数
 cpu_processor=`expr $(grep -c 'processor' /proc/cpuinfo) \* 2`
 #  编译
-result=$(scons -j$cpu_processor)
+result=$(scons -c && scons -j$cpu_processor)
 success=$(echo $result | grep -A 3 -i "filename")
-if [ $success ];then
+if [ ${#success} != 0 ];then
   echo "编译成功"
   echo $success
+else
+  echo $result
 fi
 
 
@@ -66,11 +69,19 @@ if add_env "#rtt_env_init";then
 fi
 
 #  尝试获取 env 环境
-scons --menuconfig
+if [ ! $(ls ~/| grep .env) ];then
+  scons --menuconfig
+fi
+if [ ! $(ls ~/.env/packages/packages) ];then
+  scons --menuconfig
+fi
+if [ ! $(ls ~/.env/tools/scripts) ];then
+  scons --menuconfig
+fi
 
 #  如果编译成功则尝试执行
 if check_rely qemu-system-arm;then
-  if [ $success ];then
+  if [ ${#success} != 0 ];then
     ./qemu.sh
   fi
 fi

@@ -6,11 +6,10 @@
 #      $1: 要显示的提示语
 # 接收:
 #      re: 
-#       有效值:
+#       有效值: (字母大小写均可)
 #             y
+#             ye
 #             yes
-#             Yes
-#             YES
 # 返回值:
 #      接收的值为有效值时,函数返回正常(0),否则返回错误(1)
 # 
@@ -30,12 +29,13 @@ _ifon_readme_(){
     if [ "$autoYes" = "y" ];then
         exit 0
     else
+        typeset -l re
         read -p "${echoStr}" re
         while [ ! "$re" ];do
             read -p "输入错误, 请重新输入: " re
         done
-        
-        if [ $re = "y" -o "$re" = "Y" -o "$re" = "yes" -o "$re" = "YES" -o "$re" = "Yes" ]; then
+        echo $re
+        if [ "$re" = "y" -o "$re" = "ye" -o "$re" = "yes" ]; then
             exit 0
         fi
     fi
