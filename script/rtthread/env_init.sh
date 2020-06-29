@@ -96,6 +96,14 @@ if [ ! $(ls ~/.env/tools | grep scripts) ];then
   scons --menuconfig
 fi
 
+#  Windows 换行符 转 Linux 换行符
+if [ $(ls ~/.env/packages | grep packages) ];then
+  if ! check_rely dos2unix;then
+    admin "apt install -y dos2unix"
+  fi
+  find ~/.env/packages/packages -name "Kconfig" | xargs dos2unix
+fi
+
 #  如果编译成功则尝试执行
 if check_rely qemu-system-arm;then
   if [ ${#success} != 0 ];then
