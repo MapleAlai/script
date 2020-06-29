@@ -49,7 +49,11 @@ fi
 #  获取cpu核心数
 cpu_processor=`expr $(grep -c 'processor' /proc/cpuinfo) \* 2`
 #  编译
-result=$(scons -c && scons -j$cpu_processor)
+scons -c
+time1=$(date +%s%N)
+result=$(scons -j$cpu_processor)
+time2=$(date +%s%N)
+echo 编译时间: $[(time2 - time1) / 1000000000].$[(time2 - time1) % 1000000000 / 1000000] s
 success=$(echo $result | grep -A 3 -i "filename")
 if [ ${#success} != 0 ];then
   echo "编译成功"
