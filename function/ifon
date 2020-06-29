@@ -24,13 +24,13 @@ _ifon_readme_(){
     if [ ! "$1" ];then
         echoStr="默认提示：是否继续？"
     else
-        echoStr=$1
+        echoStr=$*
     fi
     echoStr=$echoStr"[Y/n]: "
     if [ "$autoYes" = "y" ];then
         exit 0
     else
-        read -p $echoStr re
+        read -p "${echoStr}" re
         while [ ! "$re" ];do
             read -p "输入错误, 请重新输入: " re
         done
