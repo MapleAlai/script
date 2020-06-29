@@ -53,7 +53,8 @@ scons -c
 time1=$(date +%s%N)
 result=$(scons -j$cpu_processor)
 time2=$(date +%s%N)
-echo 编译时间: $[(time2 - time1) / 1000000000].$[(time2 - time1) % 1000000000 / 1000000] s
+time_ms=$[(time2 - time1) / 1000000]
+echo 编译时间: $[time_ms / 1000].$[time_ms % 1000] s
 success=$(echo $result | grep -A 3 -i "filename")
 if [ ${#success} != 0 ];then
   echo "编译成功"
