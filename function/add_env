@@ -1,0 +1,28 @@
+#!/bin/bash
+# 
+# 函数: add_env
+# 作用: 添加环境变量到 对应 xxx shell 终端的 .xxxrc 配置文件
+# 参数: 
+#      $1: 环境变量字符串,若为空，则换行
+# 返回值:
+#       0: 成功
+#       1：已存在
+# 
+path_root=$(pwd)
+PATH=/usr/bin:/bin:$path_root/../../function:$path_root/function:$path_root
+
+#   获取.xxxrc配置文件名称
+shellrcfile=~/.${SHELL##*/}rc
+
+if [ $1 ];then
+    #   检测是否存在
+    result="$(cat $shellrcfile | grep "$1")"
+    if [ $result ];then
+        echo "环境变量 $1 已存在"
+        exit 1
+    fi
+    echo $1 >> $shellrcfile
+else
+    echo >> $shellrcfile
+fi
+exit 0

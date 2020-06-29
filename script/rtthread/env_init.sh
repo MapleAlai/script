@@ -20,14 +20,13 @@ if ! check_rely qemu-system-arm;then
   	app_list=$app_list"qemu qemu-system-arm "
 	fi
 fi
-
+# 安装
 if [ $a ];then
   admin "apt install -y ${app_list}"
 fi
 
 
 alias python=python3
-alias menuconfig="scons --menuconfig"
 export RTT_EXEC_PATH=/usr/bin
 
 cd ~
@@ -51,19 +50,18 @@ if [ $success ];then
 fi
 
 
-shellrcfile=~/.${SHELL##*/}rc
-if [ ! $(cat $shellrcfile | grep "#rtt_env_init") ];then
-  echo "" >> $shellrcfile
-  echo "#rtt_env_init" >> $shellrcfile
-  echo "source ~/.env/env.sh" >> $shellrcfile
-  echo 'alias menuconfig="scons --menuconfig"' >> $shellrcfile
-  echo "alias python=python3" >> $shellrcfile
-  echo "export RTT_EXEC_PATH=/usr/bin" >> $shellrcfile
-  #source $shellrcfile
+if add_env "#rtt_env_init";then
+  echo "添加环境变量"
+  add_env "source ~/.env/env.sh" 
+  add_env 'alias menuconfig="scons --menuconfig && pkgs --update"'
+  add_env 'alias rtt_build="scons -j'${cpu_processor}'"'
+  add_env "alias python=python3"
+  add_env "export RTT_EXEC_PATH=/usr/bin"
+  add_env
 fi
 
 #  尝试获取 env 环境
-menuconfig
+scons --menuconfig
 
 #  如果编译成功则尝试执行
 if check_rely qemu-system-arm;then

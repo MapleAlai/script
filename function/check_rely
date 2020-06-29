@@ -1,10 +1,11 @@
 #!/bin/bash
 # 
 # 函数: check_rely
-# 作用: 检查系统中是否存在 $1 命令�?# 参数: 
+# 作用: 检查系统中是否存在 $1 命令
+# 参数: 
 #      $1: 你所需要的命令
-# 返回�?
-#      0：存�?#      1: 不存�?# 
+# 返回值:
+#      0：存在      1: 不存在
 
 path_root=$(pwd)
 PATH=/usr/bin:/bin:$path_root/../../function:$path_root/function:$path_root
