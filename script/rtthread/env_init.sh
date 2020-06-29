@@ -47,7 +47,7 @@ else
   cd rt-thread/bsp/stm32/stm32f103-atk-nano
 fi
 #  获取cpu核心数
-cpu_processor=`expr $(grep -c 'processor' /proc/cpuinfo) \* 2`
+cpu_processor=$[$(grep -c 'processor' /proc/cpuinfo) * 2]
 #  编译
 scons -c
 time1=$(date +%s%N)
