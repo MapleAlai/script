@@ -22,12 +22,12 @@ if [ ${#1} != 0 ];then
         fi
     else
         #   检测是否存在
-        result="$(cat $shellrcfile | grep "${1}")"
+        result=$(cat $shellrcfile | grep "${1}")
         if [ ${#result} != 0 ];then
             echo "环境变量 ${1} 已存在"
             exit 1
         fi
-        echo ${1} >> $shellrcfile
+        echo -e "${1}" >> $shellrcfile
     fi
 else
     echo >> $shellrcfile
