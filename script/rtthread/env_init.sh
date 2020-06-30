@@ -15,7 +15,7 @@ if [ "remove" = "$1" ];then
   Env -r "#rtt_env"
   Env -r "source ~/.env/env.sh" 
   Env -r 'alias menuconfig="scons --menuconfig && pkgs --update"'
-  Env 'alias rtt_build="time1=$(date +%s%N) && scons -j'${cpu_processor}' | grep -A 2 -B 3 -i "filename\|error:\|done building" && time2=$(date +%s%N) && time_ms=$[(time2 - time1) / 1000000] && echo 编译时间: $[time_ms / 1000].$[time_ms % 1000] s'
+  Env 'alias rtt_build="time1=$(date +%s%N) && scons -j'${cpu_processor}' | grep -A 2 -B 3 -i \"filename\|error:\|done building\" && time2=$(date +%s%N) && time_ms=$[(time2 - time1) / 1000000] && echo 编译时间: $[time_ms / 1000].$[time_ms % 1000] s"'
   Env 'alias rtt_clear="scons -c &>/dev/null"'
   Env -r "alias python=python3"
   Env -r "export RTT_EXEC_PATH=/usr/bin"
@@ -133,7 +133,7 @@ echo
 if Env "#rtt_env";then
   Env "source ~/.env/env.sh" 
   Env 'alias menuconfig="scons --menuconfig && pkgs --update"'
-  Env 'alias rtt_build="time1=$(date +%s%N) && scons -j'${cpu_processor}' | grep -A 2 -B 3 -i "filename\|error:\|done building" && time2=$(date +%s%N) && time_ms=$[(time2 - time1) / 1000000] && echo 编译时间: $[time_ms / 1000].$[time_ms % 1000] s'
+  Env 'alias rtt_build="time1=$(date +%s%N) && scons -j'${cpu_processor}' | grep -A 2 -B 3 -i \"filename\|error:\|done building\" && time2=$(date +%s%N) && time_ms=$[(time2 - time1) / 1000000] && echo 编译时间: $[time_ms / 1000].$[time_ms % 1000] s"'
   Env 'alias rtt_clear="scons -c &>/dev/null"'
   Env "alias python=python3"
   Env "export RTT_EXEC_PATH=/usr/bin"
@@ -156,7 +156,9 @@ if [ $(ls -a ~/.env/packages | grep packages) ];then
   if ! check_rely dos2unix;then
     admin "apt install -y dos2unix"
   fi
-  echo 转换格式成Unix格式......
+  echo
+  echo 转换成Unix格式......
+  echo
   find ~/.env/packages/packages -name "Kconfig" | xargs dos2unix &> /dev/null
 fi
 
