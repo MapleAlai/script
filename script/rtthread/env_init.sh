@@ -51,6 +51,10 @@ if ! check_rely scons;then
   app_list=$app_list"scons "
 fi
 
+if ! check_rely git;then
+  app_list=$app_list"git "
+fi
+
 if ! check_rely qemu-system-arm;then
 	if ifon "是否需要 qemu 模拟器？";then
   	app_list=$app_list"qemu qemu-system-arm "
