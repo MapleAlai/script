@@ -19,7 +19,7 @@ if [ "remove" = "$1" ];then
     fi
   fi
 fi
-if [ "-y" == "$1"];then
+if [ "-y" == "$1" ];then
   autoYes="y"
 fi
 #  检测需要安装的软件包
