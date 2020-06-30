@@ -6,21 +6,22 @@ if [ "remove" = "$1" ];then
   echo remove
   admin "apt remove gcc-arm-none-eabi libncurses5-dev libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib scons qemu qemu-system-arm "
   if [ "-y" = "$2" ];then
-    autoYes="y"
+    export autoYes="y"
   fi
   if [ $(ls ~| grep rt-thread) ];then
     if ifon "是否移除 rt-thread 源码?";then
       rm -rf ~/rt-thread
     fi
   fi
-  if [ $(ls ~| grep .env) ];then
+  if [ $(ls -a ~| grep .env) ];then
     if ifon "是否移除 .env 环境文件?";then
       rm -rf ~/.env
     fi
   fi
+  exit 0
 fi
-if [ "-y" == "$1" ];then
-  autoYes="y"
+if [ "-y" = "$1" ];then
+  export autoYes="y"
 fi
 #  检测需要安装的软件包
 app_list=""
