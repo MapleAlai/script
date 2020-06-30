@@ -2,6 +2,26 @@
 path_root=$(pwd)
 PATH=/usr/bin:/bin:$path_root/../../function:$path_root/function:$path_root
 
+if [ "remove" = "$1" ];then
+  echo remove
+  admin "apt remove gcc-arm-none-eabi libncurses5-dev libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib scons qemu qemu-system-arm "
+  if [ "-y" = "$2"];then
+    autoYes="y"
+  fi
+  if [ $(ls ~| grep rt-thread)];then
+    if ifon "是否移除 rt-thread 源码?";then
+      rm -rf ~/rt-thread
+    fi
+  fi
+  if [ $(ls ~| grep .env)];then
+    if ifon "是否移除 .env 环境文件?";then
+      rm -rf ~/.env
+    fi
+  fi
+fi
+if [ "-y" == "$1"];then
+  autoYes="y"
+fi
 #  检测需要安装的软件包
 app_list=""
 if ! check_rely arm-none-eabi-gcc;then
@@ -49,7 +69,7 @@ fi
 #  获取cpu核心数
 cpu_processor=$[$(grep -c 'processor' /proc/cpuinfo) * 2]
 #  编译
-scons -c
+scons -c &> /dev/null
 time1=$(date +%s%N)
 result=$(scons -j$cpu_processor)
 time2=$(date +%s%N)

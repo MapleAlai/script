@@ -27,6 +27,8 @@ _ifon_readme_(){
     fi
     echoStr=$echoStr"[Y/n]: "
     if [ "$autoYes" = "y" ];then
+        echoStr=$echoStr"Y"
+        echo $echoStr
         exit 0
     else
         typeset -l re
