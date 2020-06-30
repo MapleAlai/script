@@ -5,15 +5,15 @@ PATH=/usr/bin:/bin:$path_root/../../function:$path_root/function:$path_root
 if [ "remove" = "$1" ];then
   echo remove
   admin "apt remove gcc-arm-none-eabi libncurses5-dev libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib scons qemu qemu-system-arm "
-  if [ "-y" = "$2"];then
+  if [ "-y" = "$2" ];then
     autoYes="y"
   fi
-  if [ $(ls ~| grep rt-thread)];then
+  if [ $(ls ~| grep rt-thread) ];then
     if ifon "是否移除 rt-thread 源码?";then
       rm -rf ~/rt-thread
     fi
   fi
-  if [ $(ls ~| grep .env)];then
+  if [ $(ls ~| grep .env) ];then
     if ifon "是否移除 .env 环境文件?";then
       rm -rf ~/.env
     fi
