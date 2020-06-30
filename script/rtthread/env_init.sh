@@ -4,7 +4,7 @@ PATH=/usr/bin:/bin:$path_root/../../function:$path_root/function:$path_root
 
 if [ "remove" = "$1" ];then
   echo remove
-  admin "apt remove gcc-arm-none-eabi libncurses5-dev libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib scons qemu qemu-system-arm "
+  admin "apt remove -y gcc-arm-none-eabi libncurses5-dev libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib scons qemu qemu-system-arm "
   if [ "-y" = "$2" ];then
     export autoYes="y"
   fi
@@ -75,21 +75,24 @@ time1=$(date +%s%N)
 result=$(scons -j$cpu_processor)
 time2=$(date +%s%N)
 time_ms=$[(time2 - time1) / 1000000]
+echo
+echo ----------------------------------------------------
+echo 
 echo 编译时间: $[time_ms / 1000].$[time_ms % 1000] s
-success=$(echo $result | grep -A 3 -i "filename")
+success=$(echo "${result}" | grep -A 1 -i "filename")
 if [ ${#success} != 0 ];then
   echo "编译成功"
-  echo $success
+  echo "${success}"
 else
-  echo $result
-  err=$(echo $result | grep -lstdc++)
+  echo "${result}"
+  err=$(echo "${result}" | grep "-lstdc++")
   if (${#err} != 0);then
     echo "该BSP启用了 C++ features, 但是你没有选择安装支持库，故此编译错误。"
     if ifon "是否需要 C++ features 支持库?";then
       app_list="libstdc++-arm-none-eabi-newlib "
     fi
   fi
-  err=$(echo $result | grep crt0.o)
+  err=$(echo "${result}" | grep "crt0.o")
   if (${#err} != 0);then
     echo "可能是 libnewlib-arm-none-eabi 库没有安装成功，尝试重新安装...."
     app_list=$app_list"libnewlib-arm-none-eabi "
@@ -99,35 +102,38 @@ else
     admin "apt install -y ${app_list}"
   fi
 fi
+echo
+echo ----------------------------------------------------
+echo 
 
-
-if add_env "#rtt_env_init";then
+if Env "#rtt_env";then
   echo "添加环境变量"
-  add_env "source ~/.env/env.sh" 
-  add_env 'alias menuconfig="scons --menuconfig && pkgs --update"'
-  add_env 'alias rtt_build="scons -j'${cpu_processor}'"'
-  add_env "alias python=python3"
-  add_env "export RTT_EXEC_PATH=/usr/bin"
-  add_env
+  Env "source ~/.env/env.sh" 
+  Env 'alias menuconfig="scons --menuconfig && pkgs --update"'
+  Env 'alias rtt_build="scons -j'${cpu_processor}'"'
+  Env "alias python=python3"
+  Env "export RTT_EXEC_PATH=/usr/bin"
+  Env
 fi
 
 #  尝试获取 env 环境
-if [ ! $(ls ~/| grep .env) ];then
+if [ ! $(ls -a ~/| grep .env) ];then
   scons --menuconfig
 fi
-if [ ! $(ls ~/.env/packages | grep packages) ];then
+if [ ! $(ls -a ~/.env/packages | grep packages) ];then
   scons --menuconfig
 fi
-if [ ! $(ls ~/.env/tools | grep scripts) ];then
+if [ ! $(ls -a ~/.env/tools | grep scripts) ];then
   scons --menuconfig
 fi
 
 #  Windows 换行符 转 Linux 换行符
-if [ $(ls ~/.env/packages | grep packages) ];then
+if [ $(ls -a ~/.env/packages | grep packages) ];then
   if ! check_rely dos2unix;then
     admin "apt install -y dos2unix"
   fi
-  find ~/.env/packages/packages -name "Kconfig" | xargs dos2unix
+  echo 转换格式成Unix格式......
+  find ~/.env/packages/packages -name "Kconfig" | xargs dos2unix &> /dev/null
 fi
 
 #  如果编译成功则尝试执行

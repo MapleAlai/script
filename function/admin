@@ -16,6 +16,7 @@ if [ ! "$password" ];then
     while [ ! "$password" ];do
         read -p "不能为空, 请重新输入: " password
     done
+    export password=$password
 fi
 
 if [ "$*" ];then
