@@ -15,7 +15,8 @@ if [ "remove" = "$1" ];then
   Env -r "#rtt_env"
   Env -r "source ~/.env/env.sh" 
   Env -r 'alias menuconfig="scons --menuconfig && pkgs --update"'
-  Env -r 'alias rtt_build="scons -j'${cpu_processor}'"'
+  Env 'alias rtt_build="time1=$(date +%s%N) && scons -j'${cpu_processor}' | grep -A 2 -B 3 -i "filename\|error:\|done building" && time2=$(date +%s%N) && time_ms=$[(time2 - time1) / 1000000] && echo 编译时间: $[time_ms / 1000].$[time_ms % 1000] s'
+  Env 'alias rtt_clear="scons -c &>/dev/null"'
   Env -r "alias python=python3"
   Env -r "export RTT_EXEC_PATH=/usr/bin"
 
@@ -101,7 +102,7 @@ echo
 echo ----------------------------------------------------
 echo 
 echo 编译时间: $[time_ms / 1000].$[time_ms % 1000] s
-success=$(echo "${result}" | grep -A 1 -i "filename")
+success=$(echo "${result}" | grep -A 2 -B 3 -i "filename")
 if [ ${#success} != 0 ];then
   echo "编译成功"
   echo "${success}"
@@ -132,7 +133,8 @@ echo
 if Env "#rtt_env";then
   Env "source ~/.env/env.sh" 
   Env 'alias menuconfig="scons --menuconfig && pkgs --update"'
-  Env 'alias rtt_build="scons -j'${cpu_processor}'"'
+  Env 'alias rtt_build="time1=$(date +%s%N) && scons -j'${cpu_processor}' | grep -A 2 -B 3 -i "filename\|error:\|done building" && time2=$(date +%s%N) && time_ms=$[(time2 - time1) / 1000000] && echo 编译时间: $[time_ms / 1000].$[time_ms % 1000] s'
+  Env 'alias rtt_clear="scons -c &>/dev/null"'
   Env "alias python=python3"
   Env "export RTT_EXEC_PATH=/usr/bin"
   Env
