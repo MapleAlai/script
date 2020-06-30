@@ -5,7 +5,12 @@ PATH=/usr/bin:/bin:$path_root/../../function:$path_root/function:$path_root
 # 获取cpu核心数
 cpu_processor=$[$(grep -c 'processor' /proc/cpuinfo) * 2]
 
-# 如果是移除环境
+# 自动确认
+if [ "-y" = "$1" -o "-y" = "$2" ];then
+  export autoYes="y"
+fi
+
+# 如果是移除所有环境
 if [ "remove" = "$1" ];then
   Env -r "#rtt_env"
   Env -r "source ~/.env/env.sh" 
@@ -13,26 +18,24 @@ if [ "remove" = "$1" ];then
   Env -r 'alias rtt_build="scons -j'${cpu_processor}'"'
   Env -r "alias python=python3"
   Env -r "export RTT_EXEC_PATH=/usr/bin"
-  admin "apt remove -y gcc-arm-none-eabi libncurses5-dev libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib scons qemu qemu-system-arm "
-  if [ "-y" = "$2" ];then
-    export autoYes="y"
-  fi
+
+  softapp="gcc-arm-none-eabi libncurses5-dev libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib scons qemu qemu-system-arm"
+  echo "移除软件包: $softapp"
+  admin "apt remove -y $softapp"
+
   if [ $(ls ~| grep rt-thread) ];then
     if ifon "是否移除 rt-thread 源码?";then
       rm -rf ~/rt-thread
     fi
   fi
+
   if [ $(ls -a ~| grep .env) ];then
     if ifon "是否移除 .env 环境文件?";then
       rm -rf ~/.env
     fi
   fi
-  exit 0
-fi
 
-# 自动确认
-if [ "-y" = "$1" ];then
-  export autoYes="y"
+  exit 0
 fi
 
 #  检测需要安装的软件包
@@ -56,7 +59,7 @@ fi
 
 # 安装
 if [ ${#app_list} != 0 ];then
-  echo "install $app_list"
+  echo "安装软件包: $app_list"
   admin "apt install -y ${app_list}"
 fi
 
@@ -71,6 +74,8 @@ while [ ! $(ls | grep rt-thread) ];do
     sed -i 's/gitee.com/github.com/g' rt-thread/.git/config
   fi
 done
+
+# 查看是否存在 QEMU 模拟器，如果存在就进入模拟器的BSP文件夹
 if check_rely qemu-system-arm;then
   cd rt-thread/bsp/qemu-vexpress-a9
 else
@@ -80,10 +85,13 @@ fi
 #  编译
 alias python=python3
 export RTT_EXEC_PATH=/usr/bin
+# 清除上次编译结果, 无论上次是否编译过
 scons -c &> /dev/null
+# 记录编译时间
 time1=$(date +%s%N)
 result=$(scons -j$cpu_processor)
 time2=$(date +%s%N)
+# 由 ns 转成 ms
 time_ms=$[(time2 - time1) / 1000000]
 echo
 echo ----------------------------------------------------
