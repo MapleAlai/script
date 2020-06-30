@@ -2,6 +2,18 @@
 path_root=$(pwd)
 PATH=/usr/bin:/bin:$path_root/../../function:$path_root/function:$path_root
 
+# 获取cpu核心数
+cpu_processor=$[$(grep -c 'processor' /proc/cpuinfo) * 2]
+
+# 环境添加内容
+env_add_txt="
+  source ~/.env/env.sh
+  alias menuconfig=\"scons --menuconfig && pkgs --update\"
+  alias rtt_build=\"scons -j${cpu_processor}\"
+  alias python=python3
+  export RTT_EXEC_PATH=/usr/bin
+"
+# 如果是移除环境
 if [ "remove" = "$1" ];then
   echo remove
   admin "apt remove -y gcc-arm-none-eabi libncurses5-dev libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib scons qemu qemu-system-arm "
@@ -18,11 +30,16 @@ if [ "remove" = "$1" ];then
       rm -rf ~/.env
     fi
   fi
+  Env -r "#rtt_env"
+  Env -r $env_add_txt
   exit 0
 fi
+
+# 自动确认
 if [ "-y" = "$1" ];then
   export autoYes="y"
 fi
+
 #  检测需要安装的软件包
 app_list=""
 if ! check_rely arm-none-eabi-gcc;then
@@ -41,15 +58,12 @@ if ! check_rely qemu-system-arm;then
   	app_list=$app_list"qemu qemu-system-arm "
 	fi
 fi
+
 # 安装
 if [ ${#app_list} != 0 ];then
   echo "install $app_list"
   admin "apt install -y ${app_list}"
 fi
-
-
-alias python=python3
-export RTT_EXEC_PATH=/usr/bin
 
 cd ~
 #  不断尝试获取 rt-thread 源码，直到获取成功或者被中断
@@ -67,9 +81,10 @@ if check_rely qemu-system-arm;then
 else
   cd rt-thread/bsp/stm32/stm32f103-atk-nano
 fi
-#  获取cpu核心数
-cpu_processor=$[$(grep -c 'processor' /proc/cpuinfo) * 2]
+
 #  编译
+alias python=python3
+export RTT_EXEC_PATH=/usr/bin
 scons -c &> /dev/null
 time1=$(date +%s%N)
 result=$(scons -j$cpu_processor)
@@ -108,15 +123,10 @@ echo
 
 if Env "#rtt_env";then
   echo "添加环境变量"
-  Env "source ~/.env/env.sh" 
-  Env 'alias menuconfig="scons --menuconfig && pkgs --update"'
-  Env 'alias rtt_build="scons -j'${cpu_processor}'"'
-  Env "alias python=python3"
-  Env "export RTT_EXEC_PATH=/usr/bin"
-  Env
+  Env $env_add_txt
 fi
 
-#  尝试获取 env 环境
+#  尝试获取 .env 环境
 if [ ! $(ls -a ~/| grep .env) ];then
   scons --menuconfig
 fi
