@@ -30,7 +30,7 @@ if [ ${#1} != 0 ];then
             exit 1
         fi
         printf "%s\n" "${*}" >> $shellrcfile
-        printf "%s\n" "${*}"
+        printf "添加环境变量: %s\n" "${*}"
     fi
 else
     echo >> $shellrcfile
