@@ -18,19 +18,19 @@ shellrcfile=~/.${SHELL##*/}rc
 if [ ${#1} != 0 ];then
     if [ "${1}" = "-r" ];then
         if [ ${#2} != 0 ];then
-            rt=$(echo "${2}" | sed -e 's/\//\\\//g')
-            echo "移除环境变量: ${rt}"
+            rt=$(printf "%s\n" "${*}" | sed -e 's/\//\\\//g' | sed -e 's/-r //g')
+            printf "移除环境变量: %s\n" "${rt}"
             sed -i "s/${rt}//g" $shellrcfile
         fi
     else
         #   检测是否存在
-        result=$(cat $shellrcfile | grep "${1}")
+        result=$(cat $shellrcfile | grep "${*}")
         if [ ${#result} != 0 ];then
-            echo "环境变量 ${1} 已存在"
+            printf "环境变量 %s 已存在\n" "${*}"
             exit 1
         fi
-        echo -e "${1}" >> $shellrcfile
-        echo "添加环境变量: ${1}"
+        printf "%s\n" "${*}" >> $shellrcfile
+        printf "%s\n" "${*}"
     fi
 else
     echo >> $shellrcfile

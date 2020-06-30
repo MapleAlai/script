@@ -5,6 +5,14 @@ PATH=/usr/bin:/bin:$path_root/../../function:$path_root/function:$path_root
 # 获取cpu核心数
 cpu_processor=$[$(grep -c 'processor' /proc/cpuinfo) * 2]
 
+env_rtt_build='rtt_build(){
+  time1=$(date +%s%N);
+  scons -j12 | grep -A 2 -B 3 -i "filename\|error:\|done building";
+  time2=$(date +%s%N);
+  time_ms=$[(time2 - time1) / 1000000];
+  echo 编译时间: $[time_ms / 1000].$[time_ms % 1000] s;
+}'
+
 # 自动确认
 if [ "-y" = "$1" -o "-y" = "$2" ];then
   export autoYes="y"
@@ -16,7 +24,8 @@ if [ "remove" = "$1" ];then
   Env -r "export PYTHONDONTWRITEBYTECODE=1 #禁止生成__pycache__文件夹" 
   Env -r "source ~/.env/env.sh" 
   Env -r 'alias menuconfig="scons --menuconfig && pkgs --update"'
-  Env -r 'alias rtt_build="time1=$(date +%s%N) && scons -j'${cpu_processor}' | grep -A 2 -B 3 -i \"filename\|error:\|done building\" && time2=$(date +%s%N) && time_ms=$[(time2 - time1) / 1000000] && echo 编译时间: $[time_ms / 1000].$[time_ms % 1000] s"'
+  Env -r $env_rtt_build
+  #Env -r 'alias rtt_build="time1=$(date +%s%N) && scons -j'${cpu_processor}' | grep -A 2 -B 3 -i \"filename\|error:\|done building\" && time2=$(date +%s%N) && time_ms=$[(time2 - time1) / 1000000] && echo 编译时间: $[time_ms / 1000].$[time_ms % 1000] s"'
   Env -r 'alias rtt_clear="scons -c &>/dev/null"'
   Env -r "alias python=python3"
   Env -r "export RTT_EXEC_PATH=/usr/bin"
@@ -139,7 +148,8 @@ if Env "#rtt_env";then
   Env "export PYTHONDONTWRITEBYTECODE=1 #禁止生成__pycache__文件夹" 
   Env "source ~/.env/env.sh" 
   Env 'alias menuconfig="scons --menuconfig && pkgs --update"'
-  Env 'alias rtt_build="time1=$(date +%s%N) && scons -j'${cpu_processor}' | grep -A 2 -B 3 -i \"filename\|error:\|done building\" && time2=$(date +%s%N) && time_ms=$[(time2 - time1) / 1000000] && echo 编译时间: $[time_ms / 1000].$[time_ms % 1000] s"'
+  Env $env_rtt_build
+  #Env 'alias rtt_build="time1=$(date +%s%N) && scons -j'${cpu_processor}' | grep -A 2 -B 3 -i \"filename\|error:\|done building\" && time2=$(date +%s%N) && time_ms=$[(time2 - time1) / 1000000] && echo 编译时间: $[time_ms / 1000].$[time_ms % 1000] s"'
   Env 'alias rtt_clear="scons -c &>/dev/null"'
   Env "alias python=python3"
   Env "export RTT_EXEC_PATH=/usr/bin"
