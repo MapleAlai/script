@@ -5,16 +5,14 @@ PATH=/usr/bin:/bin:$path_root/../../function:$path_root/function:$path_root
 # 获取cpu核心数
 cpu_processor=$[$(grep -c 'processor' /proc/cpuinfo) * 2]
 
-# 环境添加内容
-env_add_txt="source ~/.env/env.sh
-  alias menuconfig=\"scons --menuconfig && pkgs --update\"
-  alias rtt_build=\"scons -j${cpu_processor}\"
-  alias python=python3
-  export RTT_EXEC_PATH=/usr/bin"
-
 # 如果是移除环境
 if [ "remove" = "$1" ];then
-  echo remove
+  Env -r "#rtt_env"
+  Env -r "source ~/.env/env.sh" 
+  Env -r 'alias menuconfig="scons --menuconfig && pkgs --update"'
+  Env -r 'alias rtt_build="scons -j'${cpu_processor}'"'
+  Env -r "alias python=python3"
+  Env -r "export RTT_EXEC_PATH=/usr/bin"
   admin "apt remove -y gcc-arm-none-eabi libncurses5-dev libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib scons qemu qemu-system-arm "
   if [ "-y" = "$2" ];then
     export autoYes="y"
@@ -29,14 +27,6 @@ if [ "remove" = "$1" ];then
       rm -rf ~/.env
     fi
   fi
-  echo "移除环境变量"
-  echo -e "${env_add_txt}"
-  Env -r "#rtt_env"
-  Env -r "source ~/.env/env.sh" 
-  Env -r 'alias menuconfig="scons --menuconfig && pkgs --update"'
-  Env -r 'alias rtt_build="scons -j'${cpu_processor}'"'
-  Env -r "alias python=python3"
-  Env -r "export RTT_EXEC_PATH=/usr/bin"
   exit 0
 fi
 
@@ -126,9 +116,8 @@ echo
 echo ----------------------------------------------------
 echo 
 
+# 添加环境变量
 if Env "#rtt_env";then
-  echo "添加环境变量"
-  echo -e "${env_add_txt}"
   Env "source ~/.env/env.sh" 
   Env 'alias menuconfig="scons --menuconfig && pkgs --update"'
   Env 'alias rtt_build="scons -j'${cpu_processor}'"'
