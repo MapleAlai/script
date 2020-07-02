@@ -18,10 +18,18 @@ cd script/ros && bash ros-init.sh
 > **已测试环境：armbian(focal,rk3399) deepin(20,pc) ubuntu(focal,pc)**
 
 ```bash
-bash script/rtthread/env-init.sh
+#	安装
+bash script/rtthread/env-init.sh -y
 
 		or
 
-cd script/rtthread && bash env-init.sh
+cd script/rtthread && bash env-init.sh -y
+
+#	移除
+bash script/rtthread/env-init.sh remove -y
+
+		or
+
+cd script/rtthread && bash env-init.sh remove -y
 ```
 
