@@ -147,7 +147,7 @@ echo
 if Env "#rtt_env";then
   Env "export PYTHONDONTWRITEBYTECODE=1 #禁止生成__pycache__文件夹" 
   Env "source ~/.env/env.sh" 
-  Env 'alias menuconfig="scons --menuconfig && pkgs --update"'
+  Env 'alias menuconfig="scons --menuconfig && pkgs --update && scons --target=mdk5 -s && scons --target=vsc -s"'
   Env $env_rtt_build
   #Env 'alias rtt_build="time1=$(date +%s%N) && scons -j'${cpu_processor}' | grep -A 2 -B 3 -i \"filename\|error:\|done building\" && time2=$(date +%s%N) && time_ms=$[(time2 - time1) / 1000000] && echo 编译时间: $[time_ms / 1000].$[time_ms % 1000] s"'
   Env 'alias rtt_clear="scons -c &>/dev/null"'
